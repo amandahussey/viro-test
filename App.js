@@ -6,10 +6,13 @@ import {
   ViroTrackingStateConstants,
   ViroARSceneNavigator,
   ViroARTrackingTargets,
+  ViroMaterials,
   ViroNode,
   ViroImage,
   ViroARImageMarker,
   ViroARPlane,
+  ViroSpinner,
+  ViroSkyBox,
   ViroBox,
 } from '@viro-community/react-viro';
 
@@ -26,11 +29,17 @@ const HelloWorldSceneAR = () => {
       physicalWidth: 0.0508, // real world width in meters
       type: 'Image',
     }
-  })
+  });
+
+  ViroMaterials.createMaterials({
+    spinner: {
+      diffuseColor: '#9CAF88'
+    }
+  });
 
   const onTrackingUpdated = (state, reason) => {
     if (state === ViroTrackingStateConstants.TRACKING_NORMAL) {
-      setText('Hello World!!');
+      setText('Welcome to Iris. Place your pills here.');
       console.log('trackingUpdated: TRACKING_NORMAL', reason);
     } else if (state === ViroTrackingStateConstants.TRACKING_NONE) {
       // Handle loss of tracking
@@ -51,15 +60,27 @@ const HelloWorldSceneAR = () => {
       /*onAnchorUpdated={() => console.log('onAnchorUpdated')}
       onAnchorRemoved={() => console.log('onAnchorRemoved')}*/>
 
+      {/* <ViroSkyBox color={'blue'}></ViroSkyBox> */}
+
       <ViroARImageMarker target="iris" onAnchorFound={(anchor) => console.log('onAnchorFound marker', anchor.trackingMethod)}>
-        <ViroBox position={[0, 0, 0]}
+        <ViroSpinner
+            type='light'
+            scale={[0.1, 0.1, 1]}
+            rotation={[-90, 0, 0]}
+            opacity={0.5}
+            position={[0, -0.01, 0]}
+            materials={['spinner']}
+        />
+        {/* <ViroBox position={[0, 0, 0]}
           height={0.005}
           length={0.005}
-          width={0.005}  />
+          width={0.005}  /> */}
           <ViroText
             text={text}
-            scale={[0.1, 0.1, 0.1]}
-            position={[0, 0, 0]}
+            width={2}
+            height={2}
+            scale={[0.02, 0.02, 0.02]}
+            position={[0, 0.05, 0]}
             style={styles.helloWorldTextStyle}
           />
         {/*<ViroNode position={[0,0,-1]}>
@@ -93,8 +114,8 @@ var styles = StyleSheet.create({
   f1: {flex: 1},
   helloWorldTextStyle: {
     fontFamily: 'Arial',
-    fontSize: 12,
-    color: '#ffffff',
+    fontSize: 36,
+    color: '#8ABD91',
     textAlignVertical: 'center',
     textAlign: 'center',
   },
