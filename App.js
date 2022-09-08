@@ -20,19 +20,21 @@ const HelloWorldSceneAR = () => {
 
   // register target
   ViroARTrackingTargets.createTargets({
-    redCircle: {
-      source: require('./res/red-circle.png'),
+    iris: {
+      source: require('./res/iris.jpeg'),
       orientation: "Up",
-      physicalWidth: 0.165, // real world width in meters
+      physicalWidth: 0.0508, // real world width in meters
       type: 'Image',
     }
   })
 
-  const onInitialized = (state, reason) => {
+  const onTrackingUpdated = (state, reason) => {
     if (state === ViroTrackingStateConstants.TRACKING_NORMAL) {
-      setText('Hello World!');
+      setText('Hello World!!');
+      console.log('trackingUpdated: TRACKING_NORMAL', reason);
     } else if (state === ViroTrackingStateConstants.TRACKING_NONE) {
       // Handle loss of tracking
+      console.log('trackingUpdated: TRACKING_NONE', reason);
     }
   }
 
@@ -43,28 +45,33 @@ const HelloWorldSceneAR = () => {
 
   return (
     <ViroARScene
-      onTrackingUpdated={onInitialized}
-      onAnchorFound={() => console.log('onAnchorFound')}
-      onAnchorUpdated={() => console.log('onAnchorUpdated')}
-      onAnchorRemoved={() => console.log('onAnchorRemoved')}>
-      <ViroText
-        text={text}
-        scale={[0.3, 0.3, 0.3]}
-        position={[0, 0, -1]}
-        style={styles.helloWorldTextStyle}
-      />
+      onTrackingUpdated={onTrackingUpdated}
+      onAnchorFound={() => console.log('onAnchorFound scene')}
+      //displayPointCloud={true}
+      /*onAnchorUpdated={() => console.log('onAnchorUpdated')}
+      onAnchorRemoved={() => console.log('onAnchorRemoved')}*/>
 
-      {/* <ViroARImageMarker target="redCircle">
-        <ViroNode position={[0,0,-1]}>
+      <ViroARImageMarker target="iris" onAnchorFound={(anchor) => console.log('onAnchorFound marker', anchor.trackingMethod)}>
+        <ViroBox position={[0, 0, 0]}
+          height={0.005}
+          length={0.005}
+          width={0.005}  />
+          <ViroText
+            text={text}
+            scale={[0.1, 0.1, 0.1]}
+            position={[0, 0, 0]}
+            style={styles.helloWorldTextStyle}
+          />
+        {/*<ViroNode position={[0,0,-1]}>
           <ViroImage height={0.5} width={0.5} source={require('./res/red-circle.png')} rotation={[-45,-45,-45]} />
           <ViroImage height={0.5} width={0.5} source={require('./res/red-circle.png')} rotation={[45,45,45]} />
-        </ViroNode>
-      </ViroARImageMarker> */}
+        </ViroNode>*/}
+      </ViroARImageMarker>
 
   
-      <ViroARPlane minHeight={0.1} minWidth={0.1} alignment={'Horizontal'}>
+      {/*<ViroARPlane minHeight={0.1} minWidth={0.1} alignment={'Horizontal'}>
         <ViroBox position={[0, 0, 0]} scale={[0.1, 0.1, 0.1]} />
-      </ViroARPlane>
+      </ViroARPlane>*/}
       
     </ViroARScene>
   );
@@ -86,7 +93,7 @@ var styles = StyleSheet.create({
   f1: {flex: 1},
   helloWorldTextStyle: {
     fontFamily: 'Arial',
-    fontSize: 30,
+    fontSize: 12,
     color: '#ffffff',
     textAlignVertical: 'center',
     textAlign: 'center',
